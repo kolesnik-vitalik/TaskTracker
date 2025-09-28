@@ -18,7 +18,6 @@ import java.util.stream.Stream;
 
 @RestController
 @RequiredArgsConstructor
-@Transactional
 public class ProjectController {
 
     private final ProjectRepository projectRepository;
@@ -27,10 +26,11 @@ public class ProjectController {
 
     public static final String FETCH_PROJECT = "/api/projects";
     public static final String CREATE_PROJECT = "/api/projects";
-    public static final String DELETE_PROJECT = "/api/projects/{projectId}";
+    public static final String DELETE_PROJECT = "/api/projects/{project_id}";
     public static final String EDIT_PROJECT = "/api/projects/{project_id}";
 
     @GetMapping(FETCH_PROJECT)
+    @Transactional
     public List<ProjectDto> getProjects(
             @RequestParam(value = "prefix_name", required = false) Optional<String> optionalPrefixName) {
 
