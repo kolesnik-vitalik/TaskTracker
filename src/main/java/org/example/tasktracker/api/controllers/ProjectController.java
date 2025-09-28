@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.tasktracker.api.dto.ProjectDto;
 import org.example.tasktracker.api.exceptions.BadRequestException;
 import org.example.tasktracker.api.factories.ProjectDtoFactory;
+import org.example.tasktracker.store.entity.ProjectEntity;
 import org.example.tasktracker.store.repository.ProjectRepository;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,7 +29,13 @@ public class ProjectController {
                    throw new BadRequestException(String.format("Project \"%s\" already exists", name));
                 });
 
-        return null;
+        ProjectEntity projectEntity = projectRepository.saveAndFlush(
+                ProjectEntity.builder()
+                        .name(name)
+                        .build()
+        );
+
+        return projectDtoFactory.makeProjectDto(projectEntity);
 
     }
 

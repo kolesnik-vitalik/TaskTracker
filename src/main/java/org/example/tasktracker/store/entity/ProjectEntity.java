@@ -24,6 +24,7 @@ public class ProjectEntity {
     @Column(unique = true)
     private String name;
 
+    @Builder.Default
     private Instant createdAt = Instant.now();
 
     @OneToMany
