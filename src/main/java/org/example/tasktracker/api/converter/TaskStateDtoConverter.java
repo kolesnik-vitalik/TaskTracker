@@ -1,11 +1,11 @@
-package org.example.tasktracker.api.factories;
+package org.example.tasktracker.api.converter;
 
 import org.example.tasktracker.api.dto.TaskStateDto;
 import org.example.tasktracker.store.entity.TaskStateEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TaskStateDtoFactory {
+public class TaskStateDtoConverter {
 
     public TaskStateDto makeTaskStateDto(TaskStateEntity entity) {
 

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.tasktracker.api.dto.ProjectDto;
 import org.example.tasktracker.api.exceptions.BadRequestException;
 import org.example.tasktracker.api.exceptions.NotFoundException;
-import org.example.tasktracker.api.factories.ProjectDtoFactory;
+import org.example.tasktracker.api.converter.ProjectDtoConverter;
 import org.example.tasktracker.store.entity.ProjectEntity;
 import org.example.tasktracker.store.repository.ProjectRepository;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +22,7 @@ public class ProjectController {
 
     private final ProjectRepository projectRepository;
 
-    private final ProjectDtoFactory projectDtoFactory;
+    private final ProjectDtoConverter projectDtoConverter;
 
     public static final String FETCH_PROJECT = "/api/projects";
     public static final String CREATE_PROJECT = "/api/projects";
@@ -41,7 +41,7 @@ public class ProjectController {
                 .orElseGet(projectRepository::streamAllBy);
 
         return projectStream
-                .map(projectDtoFactory::makeProjectDto)
+                .map(projectDtoConverter::makeProjectDto)
                 .collect(Collectors.toList());
     }
 
@@ -75,7 +75,7 @@ public class ProjectController {
                         .build()
         );
 
-        return projectDtoFactory.makeProjectDto(projectEntity);
+        return projectDtoConverter.makeProjectDto(projectEntity);
 
     }
 
@@ -100,7 +100,7 @@ public class ProjectController {
 
         project = projectRepository.saveAndFlush(project);
 
-        return projectDtoFactory.makeProjectDto(project);
+        return projectDtoConverter.makeProjectDto(project);
 
     }
 
