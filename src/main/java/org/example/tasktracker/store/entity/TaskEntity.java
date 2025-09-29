@@ -18,9 +18,9 @@ public class TaskEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
     private String name;
 
+    @Builder.Default
     private Instant created = Instant.now();
 
     private String description;

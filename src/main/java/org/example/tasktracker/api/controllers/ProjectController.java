@@ -21,7 +21,6 @@ import java.util.stream.Stream;
 public class ProjectController {
 
     private final ProjectRepository projectRepository;
-
     private final ProjectDtoConverter projectDtoConverter;
 
     public static final String FETCH_PROJECT = "/api/projects";

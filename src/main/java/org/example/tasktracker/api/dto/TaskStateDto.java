@@ -2,8 +2,10 @@ package org.example.tasktracker.api.dto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.example.tasktracker.store.entity.TaskStateEntity;
 
 import java.time.Instant;
+import java.util.List;
 
 @Data
 @Builder
@@ -21,7 +23,11 @@ public class TaskStateDto {
     @NonNull
     Instant created;
 
+    private Long leftTaskStateId;
+
+    private Long rightTaskStateId;
+
     @NonNull
-    Long ordinal;
+    List<TaskDto> tasks;
 
 }

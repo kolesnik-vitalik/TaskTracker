@@ -6,6 +6,7 @@ import lombok.*;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Getter
@@ -20,15 +21,28 @@ public class TaskStateEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long ordinal;
+    @OneToOne
+    private TaskStateEntity leftTaskState;
 
-    @Column(unique = true)
+    @OneToOne
+    private TaskStateEntity rightTaskState;
+
     private String name;
 
+    @Builder.Default
     private Instant created = Instant.now();
 
     @OneToMany
+    @Builder.Default
     @JoinColumn(name = "task_state_id", referencedColumnName = "id")
     private List<TaskEntity> tasks = new ArrayList<>();
+
+    public Optional<TaskStateEntity> getLeftTaskState() {
+        return Optional.ofNullable(leftTaskState);
+    }
+
+    public Optional<TaskStateEntity> getRightTaskState() {
+        return Optional.ofNullable(rightTaskState);
+    }
 
 }
