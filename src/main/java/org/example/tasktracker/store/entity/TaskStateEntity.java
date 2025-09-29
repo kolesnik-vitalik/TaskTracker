@@ -27,6 +27,9 @@ public class TaskStateEntity {
     @OneToOne
     private TaskStateEntity rightTaskState;
 
+    @ManyToOne
+    ProjectEntity project;
+
     private String name;
 
     @Builder.Default
