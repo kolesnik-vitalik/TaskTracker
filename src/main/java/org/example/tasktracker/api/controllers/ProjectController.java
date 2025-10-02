@@ -23,7 +23,6 @@ public class ProjectController {
     private final ProjectRepository projectRepository;
     private final ProjectDtoConverter projectDtoConverter;
 
-    private static final String VITALIK = "VITALIK";
     public static final String FETCH_PROJECT = "/api/projects";
     public static final String CREATE_PROJECT = "/api/projects";
     public static final String DELETE_PROJECT = "/api/projects/{project_id}";
