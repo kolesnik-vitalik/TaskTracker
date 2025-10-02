@@ -6,7 +6,6 @@ import org.example.tasktracker.api.dto.ProjectDto;
 import org.example.tasktracker.api.converter.ProjectDtoConverter;
 import org.example.tasktracker.service.ProjectService;
 import org.example.tasktracker.store.entity.ProjectEntity;
-import org.example.tasktracker.store.repository.ProjectRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
