@@ -6,7 +6,6 @@ import org.example.tasktracker.api.dto.TaskStateDto;
 import org.example.tasktracker.api.exceptions.BadRequestException;
 import org.example.tasktracker.service.TaskStateService;
 import org.example.tasktracker.store.entity.TaskStateEntity;
-import org.example.tasktracker.store.repository.TaskStateRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,8 +17,6 @@ import java.util.stream.Collectors;
 public class TaskStateController {
 
     private final TaskStateService taskStateService;
-
-    private final TaskStateRepository taskStateRepository;
 
     private final TaskStateDtoConverter taskStateDtoConverter;
 
