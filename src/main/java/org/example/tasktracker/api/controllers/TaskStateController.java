@@ -1,20 +1,15 @@
 package org.example.tasktracker.api.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.example.tasktracker.api.controllers.helper.ControllerHelper;
 import org.example.tasktracker.api.converter.TaskStateDtoConverter;
 import org.example.tasktracker.api.dto.TaskStateDto;
 import org.example.tasktracker.api.exceptions.BadRequestException;
-import org.example.tasktracker.api.exceptions.NotFoundException;
 import org.example.tasktracker.service.TaskStateService;
-import org.example.tasktracker.store.entity.ProjectEntity;
 import org.example.tasktracker.store.entity.TaskStateEntity;
 import org.example.tasktracker.store.repository.TaskStateRepository;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 

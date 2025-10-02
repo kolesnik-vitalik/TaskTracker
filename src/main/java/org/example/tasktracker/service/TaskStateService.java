@@ -3,7 +3,6 @@ package org.example.tasktracker.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.tasktracker.api.controllers.helper.ControllerHelper;
-import org.example.tasktracker.api.converter.TaskStateDtoConverter;
 import org.example.tasktracker.api.exceptions.BadRequestException;
 import org.example.tasktracker.api.exceptions.NotFoundException;
 import org.example.tasktracker.store.entity.ProjectEntity;
@@ -19,8 +18,6 @@ import java.util.Optional;
 public class TaskStateService {
 
     private final TaskStateRepository taskStateRepository;
-
-    private final TaskStateDtoConverter taskStateDtoConverter;
 
     private final ControllerHelper controllerHelper;
 
