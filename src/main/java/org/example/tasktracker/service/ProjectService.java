@@ -18,11 +18,12 @@ public class ProjectService {
 
     private final ProjectRepository projectRepository;
 
-    private final String PROJECT_NOT_FOUND = "Project with id %s not found";
+    private final String PROJECT_NOT_FOUND = "Project not found";
+    private final String PROJECT_ALREADY_EXIST = "Project \"%s\" already exists";
+    private final String PROJECT_ID_NOT_FOUND = "Project with id %s not found";
     private final String PROJECT_NAME_CANNOT_BE_EMPTY = "Project name cannot be empty";
 
     public Stream<ProjectEntity> getProjects(Optional<String> optionalPrefixName) {
-
         optionalPrefixName = optionalPrefixName.filter(prefixName -> !prefixName.trim().isEmpty());
 
         return optionalPrefixName
@@ -32,25 +33,22 @@ public class ProjectService {
 
     @Transactional
     public void deleteById(long projectId) {
-
         projectRepository.findById(projectId)
-                .orElseThrow(() -> new NotFoundException("Project not found"));
+                .orElseThrow(() -> new NotFoundException(PROJECT_NOT_FOUND));
 
         projectRepository.deleteById(projectId);
-
     }
 
     @Transactional
     public ProjectEntity edit(long projectId, String name) {
         ProjectEntity project = projectRepository
                 .findById(projectId)
-                .orElseThrow(() -> new NotFoundException(PROJECT_NOT_FOUND.formatted(projectId)));
-
+                .orElseThrow(() -> new NotFoundException(PROJECT_ID_NOT_FOUND.formatted(projectId)));
         projectRepository
                 .findByName(name)
                 .filter(anotherProject -> !Objects.equals(projectId, anotherProject.getId()))
                 .ifPresent(anotherProject -> {
-                    throw new BadRequestException(String.format("Project \"%s\" already exists", name));
+                    throw new BadRequestException(PROJECT_ALREADY_EXIST.formatted(name));
                 });
 
         project.setName(name);
@@ -69,7 +67,7 @@ public class ProjectService {
         projectRepository
                 .findByName(name)
                 .ifPresent(project -> {
-                    throw new BadRequestException(String.format("Project \"%s\" already exists", name));
+                    throw new BadRequestException(PROJECT_ALREADY_EXIST.formatted(name));
                 });
 
         ProjectEntity project = ProjectEntity.builder()

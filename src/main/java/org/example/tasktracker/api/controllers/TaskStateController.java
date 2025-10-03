@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 @RequestMapping("api/v1/task-states")
 public class TaskStateController {
 
+    private final String EMPTY_NAME = "Task state name cannot be empty";
+
     private final TaskStateService taskStateService;
 
     private final TaskStateDtoConverter taskStateDtoConverter;
@@ -36,7 +38,7 @@ public class TaskStateController {
                                         @RequestParam(name="taskStateName") String name) {
 
         if(name.trim().isEmpty()) {
-            throw new BadRequestException("Task state name cannot be empty");
+            throw new BadRequestException(EMPTY_NAME);
         }
 
         final TaskStateEntity savedTaskState = taskStateService.create(projectId, name);
@@ -49,7 +51,7 @@ public class TaskStateController {
                                         @RequestParam(name="taskStateName") String name){
 
         if(name.trim().isEmpty()) {
-            throw new BadRequestException("Task state name cannot be empty");
+            throw new BadRequestException(EMPTY_NAME);
         }
 
         TaskStateEntity savedTaskState = taskStateService.update(taskStateId, name);

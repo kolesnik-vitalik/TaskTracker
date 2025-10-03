@@ -2,11 +2,11 @@ package org.example.tasktracker.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.example.tasktracker.api.controllers.helper.ControllerHelper;
 import org.example.tasktracker.api.exceptions.BadRequestException;
 import org.example.tasktracker.api.exceptions.NotFoundException;
 import org.example.tasktracker.store.entity.ProjectEntity;
 import org.example.tasktracker.store.entity.TaskStateEntity;
+import org.example.tasktracker.store.repository.ProjectRepository;
 import org.example.tasktracker.store.repository.TaskStateRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,25 +16,32 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class TaskStateService {
+    private final ProjectRepository projectRepository;
     private final TaskStateRepository taskStateRepository;
 
-    private final ControllerHelper controllerHelper;
+    private final String TASK_STATE_NAME_EXISTS = "Task state name already exists";
+    private final String PROJECT_NOT_FOUND = "Project not found";
+    private final String TASK_STATE_NOT_FOUND = "Task state not found";
+    private final String THE_SAME_TASK_STATE = "Left task state id can't be the same";
+    private final String NOT_MATCH = "Left task state id doesn't match project id";
 
     public List<TaskStateEntity> getAllTaskStates(long projectId) {
-        ProjectEntity project = controllerHelper.getProjectEntity(projectId);
+        ProjectEntity project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new NotFoundException(PROJECT_NOT_FOUND));
 
         return project.getTaskStates();
     }
 
     @Transactional
     public TaskStateEntity create(long projectId, String name) {
-        ProjectEntity project = controllerHelper.getProjectEntity(projectId);
+        ProjectEntity project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new NotFoundException(PROJECT_NOT_FOUND));
 
         Optional<TaskStateEntity> optionalAnotherTaskState = Optional.empty();
         for(TaskStateEntity taskState : project.getTaskStates()) {
 
             if(taskState.getName().equalsIgnoreCase(name)) {
-                throw new BadRequestException("Task state name already exists");
+                throw new BadRequestException(TASK_STATE_NAME_EXISTS);
             }
 
             if(taskState.getRightTaskState().isEmpty()) {
@@ -66,7 +73,7 @@ public class TaskStateService {
 
     @Transactional
     public TaskStateEntity update(long taskStateId, String name) {
-        TaskStateEntity taskStateEntity = getTaskStateOrThrowException(taskStateId);
+        TaskStateEntity taskStateEntity = getTaskState(taskStateId);
 
         taskStateRepository
                 .findTaskStateEntityByProjectIdAndNameContainsIgnoreCase(
@@ -75,7 +82,7 @@ public class TaskStateService {
                 )
                 .filter(anotherTaskStateEntity -> !anotherTaskStateEntity.getId().equals(taskStateId))
                 .ifPresent(anotherTaskStateEntity -> {
-                    throw new BadRequestException("Task state name already exists");
+                    throw new BadRequestException(TASK_STATE_NAME_EXISTS);
                 });
 
         taskStateEntity.setName(name);
@@ -85,7 +92,7 @@ public class TaskStateService {
 
     @Transactional
     public TaskStateEntity change(Long taskStateId, Optional<Long> optionalLeftTaskStateId) {
-        TaskStateEntity changeTaskState = getTaskStateOrThrowException(taskStateId);
+        TaskStateEntity changeTaskState = getTaskState(taskStateId);
 
         ProjectEntity project = changeTaskState.getProject();
 
@@ -101,13 +108,13 @@ public class TaskStateService {
                 .map(leftTaskStateId -> {
 
                     if(taskStateId.equals(leftTaskStateId)) {
-                        throw new BadRequestException("Left task state id can't be the same");
+                        throw new BadRequestException(THE_SAME_TASK_STATE);
                     }
 
-                    TaskStateEntity leftTaskStateEntity = getTaskStateOrThrowException(leftTaskStateId);
+                    TaskStateEntity leftTaskStateEntity = getTaskState(leftTaskStateId);
 
                     if(!project.getId().equals(leftTaskStateEntity.getProject().getId())) {
-                        throw new BadRequestException("Left task state id doesn't match project id");
+                        throw new BadRequestException(NOT_MATCH);
                     }
 
                     return leftTaskStateEntity;
@@ -161,7 +168,7 @@ public class TaskStateService {
 
     @Transactional
     public TaskStateEntity delete(long taskStateId) {
-        TaskStateEntity changeTaskState = getTaskStateOrThrowException(taskStateId);
+        TaskStateEntity changeTaskState = getTaskState(taskStateId);
 
         replaceOldTaskStates(changeTaskState);
 
@@ -171,10 +178,10 @@ public class TaskStateService {
         return changeTaskState;
     }
 
-    private TaskStateEntity getTaskStateOrThrowException(long taskStateId) {
+    private TaskStateEntity getTaskState(long taskStateId) {
         return taskStateRepository
                 .findById(taskStateId)
-                .orElseThrow(() -> new NotFoundException("Task state not found"));
+                .orElseThrow(() -> new NotFoundException(TASK_STATE_NOT_FOUND));
     }
 
     private void replaceOldTaskStates(TaskStateEntity changeTaskState) {
