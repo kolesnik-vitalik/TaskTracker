@@ -18,7 +18,9 @@ public class ProjectService {
 
     private final ProjectRepository projectRepository;
 
-    @Transactional
+    private final String PROJECT_NOT_FOUND = "Project with id %s not found";
+    private final String PROJECT_NAME_CANNOT_BE_EMPTY = "Project name cannot be empty";
+
     public Stream<ProjectEntity> getProjects(Optional<String> optionalPrefixName) {
 
         optionalPrefixName = optionalPrefixName.filter(prefixName -> !prefixName.trim().isEmpty());
@@ -29,7 +31,7 @@ public class ProjectService {
     }
 
     @Transactional
-    public Boolean deleteProjectOrThrowException(Long projectId) {
+    public Boolean delete(Long projectId) {
 
         projectRepository.findById(projectId)
                 .orElseThrow(() -> new NotFoundException("Project not found"));
@@ -40,12 +42,10 @@ public class ProjectService {
     }
 
     @Transactional
-    public ProjectEntity editProjectOrThrowException(Long projectId, String name) {
+    public ProjectEntity edit(Long projectId, String name) {
         ProjectEntity project = projectRepository
                 .findById(projectId)
-                .orElseThrow(() ->
-                        new NotFoundException("Project with id " + projectId + " not found")
-                );
+                .orElseThrow(() -> new NotFoundException(PROJECT_NOT_FOUND.formatted(projectId)));
 
         projectRepository
                 .findByName(name)
@@ -62,9 +62,9 @@ public class ProjectService {
     }
 
     @Transactional
-    public ProjectEntity createProjectOrThrowException(String name) {
+    public ProjectEntity create(String name) {
         if(name.isEmpty()) {
-            throw new BadRequestException("Project name cannot be empty");
+            throw new BadRequestException(PROJECT_NAME_CANNOT_BE_EMPTY);
         }
 
         projectRepository
@@ -73,10 +73,10 @@ public class ProjectService {
                     throw new BadRequestException(String.format("Project \"%s\" already exists", name));
                 });
 
-        return projectRepository.saveAndFlush(
-                ProjectEntity.builder()
-                        .name(name)
-                        .build()
-        );
+        ProjectEntity project = ProjectEntity.builder()
+                .name(name)
+                .build();
+
+        return projectRepository.saveAndFlush(project);
     }
 }

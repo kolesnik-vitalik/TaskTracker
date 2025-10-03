@@ -15,17 +15,13 @@ import java.util.stream.Stream;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/projects")
 public class ProjectController {
 
     private final ProjectService projectService;
     private final ProjectDtoConverter projectDtoConverter;
 
-    public static final String FETCH_PROJECT = "/api/projects";
-    public static final String CREATE_PROJECT = "/api/projects";
-    public static final String DELETE_PROJECT = "/api/projects/{project_id}";
-    public static final String EDIT_PROJECT = "/api/projects/{project_id}";
-
-    @GetMapping(FETCH_PROJECT)
+    @GetMapping
     @Transactional
     public List<ProjectDto> getProjects(
             @RequestParam(value = "prefix_name", required = false) Optional<String> optionalPrefixName) {
@@ -37,26 +33,26 @@ public class ProjectController {
                 .collect(Collectors.toList());
     }
 
-    @DeleteMapping(DELETE_PROJECT)
+    @DeleteMapping("{project_id}")
     public Boolean deleteProject(@PathVariable("project_id") Long projectId) {
 
-        return projectService.deleteProjectOrThrowException(projectId);
+        return projectService.delete(projectId);
     }
 
-    @PostMapping(CREATE_PROJECT)
+    @PostMapping
     public ProjectDto createProject(@RequestParam String name) {
 
-        ProjectEntity projectEntity = projectService.createProjectOrThrowException(name);
+        ProjectEntity projectEntity = projectService.create(name);
 
         return projectDtoConverter.makeProjectDto(projectEntity);
 
     }
 
-    @PatchMapping(EDIT_PROJECT)
+    @PatchMapping("{project_id}")
     public ProjectDto editProject(@PathVariable("project_id") Long projectId,
                                   @RequestParam String name) {
 
-        ProjectEntity project = projectService.editProjectOrThrowException(projectId, name);
+        ProjectEntity project = projectService.edit(projectId, name);
 
         return projectDtoConverter.makeProjectDto(project);
 

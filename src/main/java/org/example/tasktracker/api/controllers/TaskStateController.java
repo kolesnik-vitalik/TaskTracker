@@ -47,7 +47,7 @@ public class TaskStateController {
             throw new BadRequestException("Task state name cannot be empty");
         }
 
-        final TaskStateEntity savedTaskState = taskStateService.createTaskState(projectId, name);
+        final TaskStateEntity savedTaskState = taskStateService.create(projectId, name);
 
         return taskStateDtoConverter.makeTaskStateDto(savedTaskState);
     }
@@ -60,7 +60,7 @@ public class TaskStateController {
             throw new BadRequestException("Task state name cannot be empty");
         }
 
-        TaskStateEntity savedTaskState = taskStateService.updateTaskState(taskStateId, name);
+        TaskStateEntity savedTaskState = taskStateService.update(taskStateId, name);
 
         return taskStateDtoConverter.makeTaskStateDto(savedTaskState);
     }
@@ -69,14 +69,14 @@ public class TaskStateController {
     public TaskStateDto changeTaskPosition(@PathVariable(name="task_state_id") Long taskStateId,
                                         @RequestParam(name= "left_task_state_id") Optional<Long> optionalLeftTaskStateId){
 
-        TaskStateEntity changeTaskState = taskStateService.changeTaskState(taskStateId, optionalLeftTaskStateId);
+        TaskStateEntity changeTaskState = taskStateService.change(taskStateId, optionalLeftTaskStateId);
 
         return taskStateDtoConverter.makeTaskStateDto(changeTaskState);
     }
 
     @DeleteMapping(DELETE_TASK)
     public TaskStateDto deleteTaskPosition(@PathVariable(name="task_state_id") Long taskStateId) {
-        TaskStateEntity changeTaskState = taskStateService.deleteTaskState(taskStateId);
+        TaskStateEntity changeTaskState = taskStateService.delete(taskStateId);
         return taskStateDtoConverter.makeTaskStateDto(changeTaskState);
     }
 

@@ -29,7 +29,7 @@ public class TaskStateService {
     }
 
     @Transactional
-    public TaskStateEntity createTaskState(Long projectId, String name) {
+    public TaskStateEntity create(Long projectId, String name) {
 
         ProjectEntity project = controllerHelper.getProjectEntity(projectId);
 
@@ -68,7 +68,7 @@ public class TaskStateService {
     }
 
     @Transactional
-    public TaskStateEntity updateTaskState(Long taskStateId, String name) {
+    public TaskStateEntity update(Long taskStateId, String name) {
         TaskStateEntity taskStateEntity = getTaskStateOrThrowException(taskStateId);
 
         taskStateRepository
@@ -87,7 +87,7 @@ public class TaskStateService {
     }
 
     @Transactional
-    public TaskStateEntity changeTaskState(Long taskStateId, Optional<Long> optionalLeftTaskStateId) {
+    public TaskStateEntity change(Long taskStateId, Optional<Long> optionalLeftTaskStateId) {
         TaskStateEntity changeTaskState = getTaskStateOrThrowException(taskStateId);
 
         ProjectEntity project = changeTaskState.getProject();
@@ -154,7 +154,7 @@ public class TaskStateService {
             changeTaskState.setRightTaskState(null);
         }
 
-        changeTaskState = taskStateRepository.save(changeTaskState);
+        changeTaskState = taskStateRepository.saveAndFlush(changeTaskState);
 
         optionalNewLeftTaskState.ifPresent(taskStateRepository::saveAndFlush);
         optionalNewRightTaskState.ifPresent(taskStateRepository::saveAndFlush);
@@ -163,7 +163,7 @@ public class TaskStateService {
     }
 
     @Transactional
-    public TaskStateEntity deleteTaskState(Long taskStateId) {
+    public TaskStateEntity delete(Long taskStateId) {
         TaskStateEntity changeTaskState = getTaskStateOrThrowException(taskStateId);
 
         replaceOldTaskStates(changeTaskState);
