@@ -22,7 +22,7 @@ public class TaskStateController {
     private final TaskStateDtoConverter taskStateDtoConverter;
 
     @GetMapping("/project/{projectId}")
-    public List<TaskStateDto> getTaskStates(@PathVariable(name="projectId") Long projectId) {
+    public List<TaskStateDto> getTaskStates(@PathVariable(name="projectId") long projectId) {
 
         List<TaskStateEntity> taskStateList = taskStateService.getAllTaskStates(projectId);
 
@@ -32,7 +32,7 @@ public class TaskStateController {
     }
 
     @PostMapping("/project/{projectId}")
-    public TaskStateDto createTaskState(@PathVariable(name="projectId") Long projectId,
+    public TaskStateDto createTaskState(@PathVariable(name="projectId") long projectId,
                                         @RequestParam(name="taskStateName") String name) {
 
         if(name.trim().isEmpty()) {
@@ -45,7 +45,7 @@ public class TaskStateController {
     }
 
     @PatchMapping("/{taskStateId}")
-    public TaskStateDto updateTaskState(@PathVariable(name="taskStateId") Long taskStateId,
+    public TaskStateDto updateTaskState(@PathVariable(name="taskStateId") long taskStateId,
                                         @RequestParam(name="taskStateName") String name){
 
         if(name.trim().isEmpty()) {
@@ -58,7 +58,7 @@ public class TaskStateController {
     }
 
     @PatchMapping("/{taskStateId}/position/change")
-    public TaskStateDto changeTaskPosition(@PathVariable(name="taskStateId") Long taskStateId,
+    public TaskStateDto changeTaskPosition(@PathVariable(name="taskStateId") long taskStateId,
                                         @RequestParam(name= "leftTaskStateId") Optional<Long> optionalLeftTaskStateId){
 
         TaskStateEntity changeTaskState = taskStateService.change(taskStateId, optionalLeftTaskStateId);
@@ -67,7 +67,7 @@ public class TaskStateController {
     }
 
     @DeleteMapping("/{taskStateId}")
-    public TaskStateDto deleteTaskPosition(@PathVariable(name="taskStateId") Long taskStateId) {
+    public TaskStateDto deleteTaskPosition(@PathVariable(name="taskStateId") long taskStateId) {
         TaskStateEntity changeTaskState = taskStateService.delete(taskStateId);
         return taskStateDtoConverter.makeTaskStateDto(changeTaskState);
     }

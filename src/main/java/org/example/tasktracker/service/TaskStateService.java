@@ -16,13 +16,11 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class TaskStateService {
-
     private final TaskStateRepository taskStateRepository;
 
     private final ControllerHelper controllerHelper;
 
     public List<TaskStateEntity> getAllTaskStates(Long projectId) {
-
         ProjectEntity project = controllerHelper.getProjectEntity(projectId);
 
         return project.getTaskStates();
@@ -30,7 +28,6 @@ public class TaskStateService {
 
     @Transactional
     public TaskStateEntity create(Long projectId, String name) {
-
         ProjectEntity project = controllerHelper.getProjectEntity(projectId);
 
         Optional<TaskStateEntity> optionalAnotherTaskState = Optional.empty();
@@ -185,19 +182,15 @@ public class TaskStateService {
         Optional<TaskStateEntity> optionalOldRightTaskState = changeTaskState.getRightTaskState();
 
         optionalOldLeftTaskState.ifPresent(taskState -> {
-
             taskState.setRightTaskState(optionalOldRightTaskState.orElse(null));
 
             taskStateRepository.saveAndFlush(taskState);
-
         });
 
         optionalOldRightTaskState.ifPresent(taskState -> {
-
             taskState.setLeftTaskState(optionalOldLeftTaskState.orElse(null));
 
             taskStateRepository.saveAndFlush(taskState);
-
         });
     }
 }
