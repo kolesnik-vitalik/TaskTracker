@@ -3,7 +3,6 @@ package org.example.tasktracker.api.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.example.tasktracker.store.entity.TaskStateEntity;
 
 import java.time.Instant;
 import java.util.List;
