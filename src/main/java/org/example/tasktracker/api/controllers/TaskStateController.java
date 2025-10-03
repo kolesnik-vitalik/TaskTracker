@@ -14,34 +14,26 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("api/v1/task-states")
 public class TaskStateController {
 
     private final TaskStateService taskStateService;
 
     private final TaskStateDtoConverter taskStateDtoConverter;
 
-    public static final String GET_TASK_STATE = "/api/projects/{project_id}/task-states";
-    public static final String CREATE_TASK_STATE = "/api/projects/{project_id}/task-states";
-    public static final String UPDATE_TASK_STATE = "/api/task-states/{task_state_id}";
-    public static final String CHANGE_TASK_POSITION = "/api/task-states/{task_state_id}/position/change";
-    public static final String DELETE_TASK = "/api/task-states/{task_state_id}";
-
-
-
-    @GetMapping(GET_TASK_STATE)
-    public List<TaskStateDto> getTaskStates(@PathVariable(name="project_id") Long projectId) {
+    @GetMapping("/project/{projectId}")
+    public List<TaskStateDto> getTaskStates(@PathVariable(name="projectId") Long projectId) {
 
         List<TaskStateEntity> taskStateList = taskStateService.getAllTaskStates(projectId);
 
-        return taskStateList
-                .stream()
+        return taskStateList.stream()
                 .map(taskStateDtoConverter::makeTaskStateDto)
                 .collect(Collectors.toList());
     }
 
-    @PostMapping(CREATE_TASK_STATE)
-    public TaskStateDto createTaskState(@PathVariable(name="project_id") Long projectId,
-                                        @RequestParam(name="task_state_name") String name) {
+    @PostMapping("/project/{projectId}")
+    public TaskStateDto createTaskState(@PathVariable(name="projectId") Long projectId,
+                                        @RequestParam(name="taskStateName") String name) {
 
         if(name.trim().isEmpty()) {
             throw new BadRequestException("Task state name cannot be empty");
@@ -52,9 +44,9 @@ public class TaskStateController {
         return taskStateDtoConverter.makeTaskStateDto(savedTaskState);
     }
 
-    @PatchMapping(UPDATE_TASK_STATE)
-    public TaskStateDto updateTaskState(@PathVariable(name="task_state_id") Long taskStateId,
-                                        @RequestParam(name="task_state_name") String name){
+    @PatchMapping("/{taskStateId}")
+    public TaskStateDto updateTaskState(@PathVariable(name="taskStateId") Long taskStateId,
+                                        @RequestParam(name="taskStateName") String name){
 
         if(name.trim().isEmpty()) {
             throw new BadRequestException("Task state name cannot be empty");
@@ -65,17 +57,17 @@ public class TaskStateController {
         return taskStateDtoConverter.makeTaskStateDto(savedTaskState);
     }
 
-    @PatchMapping(CHANGE_TASK_POSITION)
-    public TaskStateDto changeTaskPosition(@PathVariable(name="task_state_id") Long taskStateId,
-                                        @RequestParam(name= "left_task_state_id") Optional<Long> optionalLeftTaskStateId){
+    @PatchMapping("/{taskStateId}/position/change")
+    public TaskStateDto changeTaskPosition(@PathVariable(name="taskStateId") Long taskStateId,
+                                        @RequestParam(name= "leftTaskStateId") Optional<Long> optionalLeftTaskStateId){
 
         TaskStateEntity changeTaskState = taskStateService.change(taskStateId, optionalLeftTaskStateId);
 
         return taskStateDtoConverter.makeTaskStateDto(changeTaskState);
     }
 
-    @DeleteMapping(DELETE_TASK)
-    public TaskStateDto deleteTaskPosition(@PathVariable(name="task_state_id") Long taskStateId) {
+    @DeleteMapping("/{taskStateId}")
+    public TaskStateDto deleteTaskPosition(@PathVariable(name="taskStateId") Long taskStateId) {
         TaskStateEntity changeTaskState = taskStateService.delete(taskStateId);
         return taskStateDtoConverter.makeTaskStateDto(changeTaskState);
     }

@@ -6,6 +6,7 @@ import org.example.tasktracker.api.dto.ProjectDto;
 import org.example.tasktracker.api.converter.ProjectDtoConverter;
 import org.example.tasktracker.service.ProjectService;
 import org.example.tasktracker.store.entity.ProjectEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public class ProjectController {
     @GetMapping
     @Transactional
     public List<ProjectDto> getProjects(
-            @RequestParam(value = "prefix_name", required = false) Optional<String> optionalPrefixName) {
+            @RequestParam(value = "prefixName", required = false) Optional<String> optionalPrefixName) {
 
         Stream<ProjectEntity> projectStream = projectService.getProjects(optionalPrefixName);
 
@@ -33,10 +34,10 @@ public class ProjectController {
                 .collect(Collectors.toList());
     }
 
-    @DeleteMapping("{project_id}")
-    public Boolean deleteProject(@PathVariable("project_id") Long projectId) {
-
-        return projectService.delete(projectId);
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deleteById(@PathVariable("id") Long projectId) {
+        projectService.deleteById(projectId);
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping
@@ -48,8 +49,8 @@ public class ProjectController {
 
     }
 
-    @PatchMapping("{project_id}")
-    public ProjectDto editProject(@PathVariable("project_id") Long projectId,
+    @PatchMapping("{id}")
+    public ProjectDto edit(@PathVariable("id") Long projectId,
                                   @RequestParam String name) {
 
         ProjectEntity project = projectService.edit(projectId, name);

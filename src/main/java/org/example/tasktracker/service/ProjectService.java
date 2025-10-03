@@ -31,14 +31,13 @@ public class ProjectService {
     }
 
     @Transactional
-    public Boolean delete(Long projectId) {
+    public void deleteById(Long projectId) {
 
         projectRepository.findById(projectId)
                 .orElseThrow(() -> new NotFoundException("Project not found"));
 
         projectRepository.deleteById(projectId);
 
-        return true;
     }
 
     @Transactional
