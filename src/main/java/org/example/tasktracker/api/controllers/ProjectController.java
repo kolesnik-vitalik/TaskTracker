@@ -35,7 +35,7 @@ public class ProjectController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteById(@PathVariable("id") Long projectId) {
+    public ResponseEntity<?> deleteById(@PathVariable("id") long projectId) {
         projectService.deleteById(projectId);
         return ResponseEntity.notFound().build();
     }
@@ -50,7 +50,7 @@ public class ProjectController {
     }
 
     @PatchMapping("{id}")
-    public ProjectDto edit(@PathVariable("id") Long projectId,
+    public ProjectDto edit(@PathVariable("id") long projectId,
                                   @RequestParam String name) {
 
         ProjectEntity project = projectService.edit(projectId, name);

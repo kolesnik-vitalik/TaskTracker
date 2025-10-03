@@ -20,14 +20,14 @@ public class TaskStateService {
 
     private final ControllerHelper controllerHelper;
 
-    public List<TaskStateEntity> getAllTaskStates(Long projectId) {
+    public List<TaskStateEntity> getAllTaskStates(long projectId) {
         ProjectEntity project = controllerHelper.getProjectEntity(projectId);
 
         return project.getTaskStates();
     }
 
     @Transactional
-    public TaskStateEntity create(Long projectId, String name) {
+    public TaskStateEntity create(long projectId, String name) {
         ProjectEntity project = controllerHelper.getProjectEntity(projectId);
 
         Optional<TaskStateEntity> optionalAnotherTaskState = Optional.empty();
@@ -65,7 +65,7 @@ public class TaskStateService {
     }
 
     @Transactional
-    public TaskStateEntity update(Long taskStateId, String name) {
+    public TaskStateEntity update(long taskStateId, String name) {
         TaskStateEntity taskStateEntity = getTaskStateOrThrowException(taskStateId);
 
         taskStateRepository
@@ -160,7 +160,7 @@ public class TaskStateService {
     }
 
     @Transactional
-    public TaskStateEntity delete(Long taskStateId) {
+    public TaskStateEntity delete(long taskStateId) {
         TaskStateEntity changeTaskState = getTaskStateOrThrowException(taskStateId);
 
         replaceOldTaskStates(changeTaskState);
@@ -171,7 +171,7 @@ public class TaskStateService {
         return changeTaskState;
     }
 
-    private TaskStateEntity getTaskStateOrThrowException(Long taskStateId) {
+    private TaskStateEntity getTaskStateOrThrowException(long taskStateId) {
         return taskStateRepository
                 .findById(taskStateId)
                 .orElseThrow(() -> new NotFoundException("Task state not found"));

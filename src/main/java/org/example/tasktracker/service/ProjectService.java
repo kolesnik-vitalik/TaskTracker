@@ -31,7 +31,7 @@ public class ProjectService {
     }
 
     @Transactional
-    public void deleteById(Long projectId) {
+    public void deleteById(long projectId) {
 
         projectRepository.findById(projectId)
                 .orElseThrow(() -> new NotFoundException("Project not found"));
@@ -41,7 +41,7 @@ public class ProjectService {
     }
 
     @Transactional
-    public ProjectEntity edit(Long projectId, String name) {
+    public ProjectEntity edit(long projectId, String name) {
         ProjectEntity project = projectRepository
                 .findById(projectId)
                 .orElseThrow(() -> new NotFoundException(PROJECT_NOT_FOUND.formatted(projectId)));
