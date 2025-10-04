@@ -13,12 +13,15 @@ import java.time.Instant;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProjectDto {
 
+    @JsonProperty("id")
     @NonNull
     Long id;
 
+    @JsonProperty("name")
     @NonNull
     String name;
 
+    @JsonProperty("createdAt")
     @NonNull
     Instant createdAt;
 }
